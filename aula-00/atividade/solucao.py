@@ -10,7 +10,7 @@ import urllib.request
 import urllib.error
 
 OLLAMA_BASE_URL = "http://localhost:11434"
-TEST_MODEL = "llama3.2:1b"
+TEST_MODEL = "gemma4:12b"
 
 def verificar_servico(url):
     """Verifica se a API do Ollama está ativa."""
@@ -78,17 +78,12 @@ def main():
     modelo_ativo = TEST_MODEL if any(TEST_MODEL in m for m in modelos) else modelos[0]
     prompt_teste = "Responda em uma única frase: o que é inteligência artificial?"
 
-    print(f"
-Enviando prompt de teste para o modelo '{modelo_ativo}'...")
+    print(f"Enviando prompt de teste para o modelo '{modelo_ativo}'...")
     try:
         resposta, tempo_gasto = testar_inferencia(OLLAMA_BASE_URL, modelo_ativo, prompt_teste)
-        print(f"
-Resposta do modelo:
-\"{resposta}\"")
-        print(f"
-Tempo de resposta: {tempo_gasto:.2f}s")
-        print("
-[SUCESSO] Ambiente homologado e pronto para a UC10!")
+        print(f"Resposta do modelo:\"{resposta}\"")
+        print(f"Tempo de resposta: {tempo_gasto:.2f}s")
+        print("[SUCESSO] Ambiente homologado e pronto para a UC10!")
     except Exception as e:
         print(f"[ERRO na inferência]: {e}")
 
