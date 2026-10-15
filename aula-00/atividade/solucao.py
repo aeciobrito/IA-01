@@ -10,7 +10,7 @@ import urllib.request
 import urllib.error
 
 OLLAMA_BASE_URL = "http://localhost:11434"
-TEST_MODEL = "gemma4:12b"
+TEST_MODEL = "gemma4:e2b"
 
 def verificar_servico(url):
     """Verifica se a API do Ollama está ativa."""
