@@ -1,9 +1,11 @@
 import sqlite3
+import requests
 from flask import Flask, request
 
 app = Flask(__name__)
 
 DB_PATH = "_bancoDeDados\pizzaria\pizzaria.db"
+OLLAMA_URL = "http://localhost:11434/api/generate"
 
 @app.route("/api/ola", methods=['POST'])
 def rota_ola():
@@ -31,9 +33,28 @@ def rota_consulta_usuario():
     resultado = executar_consulta(comando)
     return resultado
 
-@app.route("/api/ollama") # EXERCÍCIO 3
+@app.route("/api/pedidos")
+def rota_pedidos():
+    consulta = "SELECT * FROM Pedidos"
+    return executar_consulta(consulta)
+
+@app.route("/api/ollama", methods=['POST']) # EXERCÍCIO 3
 def rota_ollama():
-    return "RESPOSTA DO OLLAMA"
+    dados = request.get_json()
+    promptDoUsuario = dados.get("prompt", "")
+
+    respostaDoOllama = requests.post(
+        "http://localhost:11434/api/generate",
+        json={
+            "model": "gemma4:e2b",
+            "prompt": promptDoUsuario,
+            "stream": False
+        },
+        timeout=120
+        )
+
+    respostaParaUsuario = respostaDoOllama.json().get("response")
+    return f"O usuário enviou: {promptDoUsuario}, resposta do Ollama: {respostaParaUsuario}"
 
 def executar_consulta(sql: str):
     with sqlite3.connect(DB_PATH) as conn:
